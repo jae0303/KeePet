@@ -21,9 +21,10 @@ void setup() {
 
 void loop(){
     pirVal = digitalRead(pirDegitalPin); // 센서값 읽기
+    
     if (pirVal == HIGH) { // 인체감지시
-      Serial.println("P1");
-        pirState = LOW;
+      Serial.println(pirVal);
+        pirVal = LOW;
     }
     /*else{
       Serial.println("P0");
