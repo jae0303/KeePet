@@ -9,6 +9,7 @@ int soundValue = 0;
 int soundValueP = 0;
 
 String soundMessage = "S";
+String msg = "";
  
 void setup() {
     //pinMode(ledPin, OUTPUT); // LED Output 설정
@@ -19,12 +20,19 @@ void setup() {
     Serial.begin(9600);
 }
 
+unsigned long timeChecker = 0;
+
 void loop(){
-    pirVal = digitalRead(pirDegitalPin); // 센서값 읽기
+  unsigned long currentTime = millis();
+  pirVal = digitalRead(pirDegitalPin); // 센서값 읽기
     
     if (pirVal == HIGH) { // 인체감지시
-      Serial.println(pirVal);
+      if(currentTime - timeChecker > 3000){ //연속 출력 방지용으로 시간 함수 사용
+        timeChecker = currentTime; 
+        Serial.println(pirVal);
+        //Serial.println(timeChecker);
         pirVal = LOW;
+      }           
     }
     /*else{
       Serial.println("P0");
