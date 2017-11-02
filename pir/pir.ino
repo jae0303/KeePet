@@ -6,6 +6,8 @@ int pirState = LOW; // PIR 초기상태
 int pirVal = 0; // Signal 입력값
 
 int soundValue = 0;
+int soundValueP = 0;
+
 String soundMessage = "S";
  
 void setup() {
@@ -19,18 +21,25 @@ void setup() {
 
 void loop(){
     pirVal = digitalRead(pirDegitalPin); // 센서값 읽기
+    
     if (pirVal == HIGH) { // 인체감지시
-      Serial.println("P1");
-        pirState = LOW;
+      Serial.println(pirVal);
+        pirVal = LOW;
     }
-    else{
+    /*else{
       Serial.println("P0");
-    }
+    }*/
 
     soundValue = analogRead(A0);
     soundMessage.concat(soundValue);
-    Serial.println(soundMessage);
+    
+    if((soundValue - soundValueP)>=100){
+      Serial.println(soundMessage);
+    }
+    
     soundMessage = "S";
+    
+    soundValueP = soundValue;
     
     delay(500);
 }
