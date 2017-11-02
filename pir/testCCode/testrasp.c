@@ -13,7 +13,7 @@
 // ARDUINO_UNO "/dev/ttyACM0"
 // FTDI_PROGRAMMER "/dev/ttyUSB0"
 // HARDWARE_UART "/dev/ttyAMA0"
-char device[]= "/dev/ttyACM1";
+char device[]= "/dev/ttyACM0";
 // filedescriptor
 int fd;
 unsigned long baud = 9600;
