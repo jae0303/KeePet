@@ -40,10 +40,10 @@ void setup(){
  
 }
 
-char *token = NULL;
-char *divider = "\n";
-
-int i = 0;
+	char *token = NULL;
+	char *divider = "\n";
+	
+	int i = 0;
 
 void loop(){
 	if(serialDataAvail(fd)){
@@ -68,6 +68,14 @@ void loop(){
 	}
     fflush(stdout);
   } 
+  
+  ////////////////////////////////
+  
+    if(serialDataAvail(fd)){
+    char newChar =  serialGetchar(fd);
+    printf("%c", newChar);
+    fflush(stdout);
+    
   */
 }
  
