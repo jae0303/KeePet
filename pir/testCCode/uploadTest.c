@@ -46,6 +46,8 @@
 #include <wiringPi.h>
 #include <wiringSerial.h>
 
+#define _CRT_SECURE_NO_WARNINGS
+
 char device[]= "/dev/ttyACM0";
 
 int fd;
@@ -162,6 +164,68 @@ void parseInputArgsForConnectParams(int argc, char** argv) {
 	}
 
 }
+char *getSensorType(char* serial){
+	char *sensorType = malloc(sizeof(char)*10);
+	
+	if(serial[0] == 'P'){
+		strcpy(sensorType, "PIR"); //free() 오류 제거를 위해서 문자열을 heap 영역에 저장시켜야 한다 
+	}
+	else if(serial[0] == 'S'){
+		strcpy(sensorType, "PIR");
+	}
+		
+	return sensorType;
+}
+
+
+/*
+char *getStringFromSerial(){
+	char *msg = malloc(sizeof(char)*10);
+	int x = 0;
+	
+	while(serialDataAvail(fd)){
+		char newChar = serialGetchar(fd);
+		if(newChar == 'P' || newChar == 'S'){
+			msg[0] = newChar;
+			x++;
+		}
+		else if(msg[0] == 'P' && x == 1){
+			msg[x] = newChar;
+			msg[x+1] = '\n';
+			break;
+		}
+		else if(x == 4){
+			msg[x] = '\n';
+			break;
+		}
+		else{
+			msg[x] = newChar;
+			x++;
+		}
+	}
+	
+	return msg;	
+}
+*/
+char *getStringFromSerial(){
+	char *msg = malloc(sizeof(char)*10);
+	int x = 0;
+	
+	while(serialDataAvail(fd)){
+		char newChar = serialGetchar(fd);
+		if(newChar != '\n'){
+			msg[x] = newChar;
+			x++;
+		}
+		else{
+			msg[x] = '\n';
+			printf("sending msg = %s", msg);
+			break;
+		}
+	}
+	
+	return msg;		
+}
 
 int main(int argc, char** argv) {
 	IoT_Error_t rc = NONE_ERROR;
@@ -251,54 +315,42 @@ int main(int argc, char** argv) {
 	if (publishCount != 0) {
 		infinitePublishFlag = false;
 	}
-	
-	int serialLength = 20;
-	char serialString[serialLength];
-
-	char msg[10];
-	int x = 0;
 			
-while ((NETWORK_ATTEMPTING_RECONNECT == rc || RECONNECT_SUCCESSFUL == rc || NONE_ERROR == rc)
+	while ((NETWORK_ATTEMPTING_RECONNECT == rc || RECONNECT_SUCCESSFUL == rc || NONE_ERROR == rc)
 			&& (publishCount > 0 || infinitePublishFlag)) {
 
 		//Max time the yield function will wait for read messages
 		rc = aws_iot_mqtt_yield(100);
 		if(NETWORK_ATTEMPTING_RECONNECT == rc){
-			INFO("-->sleep(reconnecting)");
+			INFO("-->sleep");
 			sleep(1);
 			// If the client is attempting to reconnect we will skip the rest of the loop.
 			continue;
 		}
-		INFO("-->sleep(waiting)");
+		INFO("-->waiting");
 		sleep(1);
 		
+		char *serial;
+		serial = getStringFromSerial();
+		//printf("serial checker: %s\n", serial);
 		
-		while(serialDataAvail(fd)){
-			char newChar = serialGetchar(fd);
-			if(newChar != '\n'){
-				msg[x] = newChar;
-				x++;
-			}
-			else{
-				msg[x] = '\n';
-				printf("sending msg = %s", msg);
-				
-				sprintf(cPayload, "{\"serialNumber\" : \"ABCDEFG12\",\"sensorType\" : \"%c\",\"sensorValue\" : \"%s\"}", msg[0], msg, i++);
-				printf("-----------------------------------------------------------------------\n");
-				printf("Payload check: %s", cPayload);
-				printf("-----------------------------------------------------------------------\n");
-				
-				Msg.PayloadLen = strlen(cPayload) + 1;
-				Params.MessageParams = Msg;
-				rc = aws_iot_mqtt_publish(&Params);
-				if (publishCount > 0) {
-					publishCount--;
-				}
-				msg[0] = '\0';
-				x = 0;
-				break;	
-			}			
+		char *sensorType;
+		sensorType = getSensorType(serial);
+		//printf("type checker: %s\n", sensorType);
+		
+		sprintf(cPayload, "{\"serialNumber\" : \"A12\",\"sensorType\" : \"%s\",\"sensorValue\" : \"%s\"}", sensorType, serial, i++);
+		//printf("payload checker: %s", cPayload);
+		
+		Msg.PayloadLen = strlen(cPayload) + 1;
+		Params.MessageParams = Msg;
+		rc = aws_iot_mqtt_publish(&Params);
+		
+		if (publishCount > 0) {
+			publishCount--;
 		}
+		
+		free(serial);
+		free(sensorType); 
 	}
 
 	if (NONE_ERROR != rc) {
