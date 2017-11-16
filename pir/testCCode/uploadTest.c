@@ -251,27 +251,53 @@ int main(int argc, char** argv) {
 	if (publishCount != 0) {
 		infinitePublishFlag = false;
 	}
+	
+	int serialLength = 20;
+	char serialString[serialLength];
 
-	while ((NETWORK_ATTEMPTING_RECONNECT == rc || RECONNECT_SUCCESSFUL == rc || NONE_ERROR == rc)
+	char msg[10];
+	int x = 0;
+			
+while ((NETWORK_ATTEMPTING_RECONNECT == rc || RECONNECT_SUCCESSFUL == rc || NONE_ERROR == rc)
 			&& (publishCount > 0 || infinitePublishFlag)) {
 
-		loop();
 		//Max time the yield function will wait for read messages
 		rc = aws_iot_mqtt_yield(100);
 		if(NETWORK_ATTEMPTING_RECONNECT == rc){
-			INFO("-->sleep");
+			INFO("-->sleep(reconnecting)");
 			sleep(1);
 			// If the client is attempting to reconnect we will skip the rest of the loop.
 			continue;
 		}
-		INFO("-->sleep");
+		INFO("-->sleep(waiting)");
 		sleep(1);
-		sprintf(cPayload, "{\"serialNumber\" : \"54321\",\"batteryVoltage\" : \"3000mV\",\"clickType\" : \"Move\"}", i++);
-		Msg.PayloadLen = strlen(cPayload) + 1;
-		Params.MessageParams = Msg;
-		rc = aws_iot_mqtt_publish(&Params);
-		if (publishCount > 0) {
-			publishCount--;
+		
+		
+		while(serialDataAvail(fd)){
+			char newChar = serialGetchar(fd);
+			if(newChar != '\n'){
+				msg[x] = newChar;
+				x++;
+			}
+			else{
+				msg[x] = '\n';
+				printf("sending msg = %s", msg);
+				
+				sprintf(cPayload, "{\"serialNumber\" : \"ABCDEFG12\",\"sensorType\" : \"%c\",\"sensorValue\" : \"%s\"}", msg[0], msg, i++);
+				printf("-----------------------------------------------------------------------\n");
+				printf("Payload check: %s", cPayload);
+				printf("-----------------------------------------------------------------------\n");
+				
+				Msg.PayloadLen = strlen(cPayload) + 1;
+				Params.MessageParams = Msg;
+				rc = aws_iot_mqtt_publish(&Params);
+				if (publishCount > 0) {
+					publishCount--;
+				}
+				msg[0] = '\0';
+				x = 0;
+				break;	
+			}			
 		}
 	}
 

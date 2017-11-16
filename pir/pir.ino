@@ -10,6 +10,7 @@ int soundValueP = 0;
 
 String soundMessage = "S";
 String msg = "";
+String pirMessage = "P1";
  
 void setup() {
     //pinMode(ledPin, OUTPUT); // LED Output 설정
@@ -29,7 +30,8 @@ void loop(){
     if (pirVal == HIGH) { // 인체감지시
       if(currentTime - timeChecker > 3000){ //연속 출력 방지용으로 시간 함수 사용
         timeChecker = currentTime; 
-        Serial.println(pirVal);
+        
+        Serial.println(pirMessage);
         //Serial.println(timeChecker);
         pirVal = LOW;
       }           
@@ -41,14 +43,12 @@ void loop(){
     soundValue = analogRead(A0);
     soundMessage.concat(soundValue);
     
-    if((soundValue - soundValueP)>=100){
+    if(soundValue > 250){
       Serial.println(soundMessage);
     }
     
     soundMessage = "S";
-    
-    soundValueP = soundValue;
-    
+        
     delay(500);
 }
  /*
