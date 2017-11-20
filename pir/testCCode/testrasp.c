@@ -39,50 +39,19 @@ void setup(){
   }
  
 }
-
-	char *token = NULL;
-	char *divider = "\n";
 	
-	int i = 0;
-
 void loop(){
-	if(serialDataAvail(fd)){
-    char newChar =  serialGetchar(fd);
-    printf("%c", newChar);
-    
-    if(newChar=='\n') printf("end line\n");
-    
-    fflush(stdout);
-	}	
-	/*
-  if(serialDataAvail(fd)){
-  	char newChar =  serialGetchar(fd);
-    
-    if(newChar != '\n'){
-    	token[i] = newChar;
-    	i++;
-	}
-	else{
-		printf("%s", token);
-		i=0;
-	}
-    fflush(stdout);
-  } 
-  
-  ////////////////////////////////
-  
+	
     if(serialDataAvail(fd)){
-    char newChar =  serialGetchar(fd);
-    printf("%c", newChar);
-    fflush(stdout);
-    
-  */
+    	char newChar =  serialGetchar(fd);
+    	printf("%c", newChar);
+    	fflush(stdout);
+	}	
 }
- 
 // main function for normal c++ programs on Raspberry
 int main(){
   setup();
-  printf("Start sensor message printing!\n");
+  //printf("Start sensor message printing!\n");
   while(1) loop();
   return 0;
 }

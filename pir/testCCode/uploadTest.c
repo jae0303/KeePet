@@ -164,17 +164,16 @@ void parseInputArgsForConnectParams(int argc, char** argv) {
 	}
 
 }
-char *getSensorType(char* serial){
-	char *sensorType = malloc(sizeof(char)*10);
+void getSensorType(char* serial, char* result){
 	
-	if(serial[0] == 'P'){
-		strcpy(sensorType, "PIR"); //free() 오류 제거를 위해서 문자열을 heap 영역에 저장시켜야 한다 
+	switch (serial[0]){
+		case 'P' : 
+			strcpy(result, "PIR"); //free() 오류 제거를 위해서 문자열을 heap 영역에 저장시켜야 한다 
+			break;
+		case 'S' :
+			strcpy(result, "SOUND");
+			break;
 	}
-	else if(serial[0] == 'S'){
-		strcpy(sensorType, "PIR");
-	}
-		
-	return sensorType;
 }
 
 
@@ -203,28 +202,29 @@ char *getStringFromSerial(){
 			x++;
 		}
 	}
-	
+
 	return msg;	
 }
 */
-char *getStringFromSerial(){
-	char *msg = malloc(sizeof(char)*10);
+void getStringFromSerial(char *result, int msgChecker){
+	
 	int x = 0;
 	
 	while(serialDataAvail(fd)){
 		char newChar = serialGetchar(fd);
+		
 		if(newChar != '\n'){
-			msg[x] = newChar;
+			result[x] = newChar;
 			x++;
 		}
 		else{
-			msg[x] = '\n';
-			printf("sending msg = %s", msg);
+			result[x] = '\n';
+			//printf("sending msg = %s", msg);
 			break;
 		}
 	}
 	
-	return msg;		
+	msgChecker = 0;
 }
 
 int main(int argc, char** argv) {
@@ -240,6 +240,11 @@ int main(int argc, char** argv) {
 	char clientCRTName[] = AWS_IOT_CERTIFICATE_FILENAME;
 	char clientKeyName[] = AWS_IOT_PRIVATE_KEY_FILENAME;
 	
+	//////////////////////////////
+	//char *msgResult = malloc(sizeof(char)*10);
+	char msgResult[10];
+	char *sensorTypeResult = malloc(sizeof(char)*10);
+	int msgChecker = 0;
 	//////////////////////////////
 	setup();
 	
@@ -315,7 +320,10 @@ int main(int argc, char** argv) {
 	if (publishCount != 0) {
 		infinitePublishFlag = false;
 	}
-			
+	
+	char msg[10];
+	int x = 0;
+	
 	while ((NETWORK_ATTEMPTING_RECONNECT == rc || RECONNECT_SUCCESSFUL == rc || NONE_ERROR == rc)
 			&& (publishCount > 0 || infinitePublishFlag)) {
 
@@ -330,27 +338,37 @@ int main(int argc, char** argv) {
 		INFO("-->waiting");
 		sleep(1);
 		
-		char *serial;
-		serial = getStringFromSerial();
-		//printf("serial checker: %s\n", serial);
-		
-		char *sensorType;
-		sensorType = getSensorType(serial);
-		//printf("type checker: %s\n", sensorType);
-		
-		sprintf(cPayload, "{\"serialNumber\" : \"A12\",\"sensorType\" : \"%s\",\"sensorValue\" : \"%s\"}", sensorType, serial, i++);
-		//printf("payload checker: %s", cPayload);
-		
+		sprintf(cPayload, "{\"serialNumber\" : \"B777B\",\"batteryVoltage\" : \"777mV\",\"clickType\" : \"SINGLE\"}", i++);
 		Msg.PayloadLen = strlen(cPayload) + 1;
 		Params.MessageParams = Msg;
 		rc = aws_iot_mqtt_publish(&Params);
-		
 		if (publishCount > 0) {
 			publishCount--;
 		}
 		
-		free(serial);
-		free(sensorType); 
+	/*	while(serialDataAvail(fd)){
+			char newChar = serialGetchar(fd);
+			if(newChar != '\n'){
+				msg[x] = newChar;
+				x++;
+			}
+			else{
+				//msg[x] = '\0';
+								
+				sprintf(cPayload, "{\"serialNumber\" : \"A12\",\"sensorType\" : \"%c\",\"sensorValue\" : \"%s\"}", msg[0], msg, i++);
+							
+				Msg.PayloadLen = strlen(cPayload) + 1;
+				Params.MessageParams = Msg;
+				rc = aws_iot_mqtt_publish(&Params);
+				if (publishCount > 0) {
+					publishCount--;
+				}
+				msg[0] = '\0';
+				x = 0;
+				break;	
+			}			
+		}
+		*/
 	}
 
 	if (NONE_ERROR != rc) {
