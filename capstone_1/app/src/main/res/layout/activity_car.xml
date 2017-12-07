@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <WebView
+            android:layout_width="match_parent"
+            android:layout_height="247dp"
+            android:id="@+id/webView">
+        </WebView>
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <RelativeLayout
+                android:id="@+id/layout_joystick"
+                android:layout_width="209dp"
+                android:layout_height="209dp"
+                android:layout_below="@+id/linearLayout1"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="29dp"
+                android:background="@drawable/base">
+            </RelativeLayout>
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="76dp"
+                android:layout_height="match_parent"
+                android:weightSum="1">
+
+                <Button
+                    android:id="@+id/ccw"
+                    android:background="@drawable/ccw"
+                    android:onClick="onClick"
+                    android:layout_weight="0.09"
+                    android:layout_height="55dp"
+                    android:layout_width="75dp" />
+
+                <Button
+                    android:id="@+id/micBotton"
+                    android:background="@drawable/micb"
+                    android:onClick="onClick"
+                    android:layout_weight="0.09"
+                    android:layout_width="75dp"
+                    android:layout_height="50dp" />
+
+                <ToggleButton
+                    android:textOn=""
+                    android:textOff=""
+                    android:id="@+id/servoButton"
+                    android:background="@drawable/servostartb"
+                    android:onClick="onClick"
+                    android:layout_weight="0.09"
+                    android:layout_height="55dp"
+                    android:layout_width="75dp" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="84dp"
+                android:layout_height="match_parent"
+                android:weightSum="1">
+
+                <Button
+                    android:id="@+id/cw"
+                    android:background="@drawable/cw"
+                    android:onClick="onClick"
+                    android:layout_weight="0.09"
+                    android:layout_height="55dp"
+                    android:layout_width="75dp" />
+
+                <Button
+                    android:background="@drawable/macrosetb"
+                    android:id="@+id/macroSet"
+                    android:onClick="onClick"
+                    android:layout_weight="0.08"
+                    android:layout_height="55dp"
+                    android:layout_width="75dp" />
+
+                <ToggleButton
+                    android:textOn=""
+                    android:textOff=""
+                    android:id="@+id/laiserBotton"
+                    android:layout_weight="0.09"
+                    android:background="@drawable/laseronb"
+                    android:onClick="onClick"
+                    android:layout_height="55dp"
+                    android:layout_width="75dp" />
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
+
+</LinearLayout>

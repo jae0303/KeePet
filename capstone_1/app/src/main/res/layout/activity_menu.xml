@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:text=" "
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/ipView" />
+
+    <Button
+        android:id="@+id/carButton"
+        android:background="@drawable/controlb"
+        android:onClick="onClick"
+        android:layout_width="250dp"
+        android:layout_height="70dp"
+        android:layout_below="@+id/button4"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="20dp" />
+
+    <Button
+        android:id="@+id/setButton"
+        android:background="@drawable/optionb"
+        android:onClick="onClick"
+        android:layout_height="70dp"
+        android:layout_width="250dp"
+        android:layout_below="@+id/carButton"
+        android:layout_alignStart="@+id/carButton"
+        android:layout_marginTop="13dp" />
+
+    <Button
+        android:text=" "
+        android:background="@drawable/mmainb"
+        android:id="@+id/button4"
+        android:layout_width="240dp"
+        android:layout_height="240dp"
+        android:layout_below="@+id/ipView"
+        android:layout_centerHorizontal="true" />
+
+</RelativeLayout>
