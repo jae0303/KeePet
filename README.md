@@ -4,9 +4,16 @@
 
 ### 프로젝트 주제
 - 반려동물 관리 시스템
+
 #### 레포지토리 주소
 - [Project Repository](https://github.com/jae0303/KeePet)
 
+#### 프로젝트 파트
+**1) Android
+
+**2) AWS, Pi
+
+**3) Arduino
 #### 1. 배경 및 필요성
 - 
 
