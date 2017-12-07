@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <Button
+        android:text=" "
+        android:layout_width="302dp"
+        android:layout_height="wrap_content"
+        android:background="@drawable/omain"
+        android:id="@+id/button3"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="18dp" />
+
+    <Button
+        android:text=" "
+        android:layout_width="270dp"
+        android:background="@drawable/monb"
+        android:id="@+id/macroOn"
+        android:onClick="onClick"
+        android:layout_height="70dp"
+        android:layout_marginTop="23dp"
+        android:layout_below="@+id/button3"
+        android:layout_centerHorizontal="true" />
+
+    <Button
+        android:text=" "
+        android:id="@+id/macroOff"
+        android:background="@drawable/moffb"
+        android:onClick="onClick"
+        android:layout_width="270dp"
+        android:layout_height="70dp"
+        android:layout_below="@+id/macroOn"
+        android:layout_alignStart="@+id/macroOn"
+        android:layout_marginTop="13dp" />
+
+    <Button
+        android:text=" "
+        android:layout_width="270dp"
+        android:background="@drawable/sensoronb"
+        android:id="@+id/SmacroOn"
+        android:onClick="onClick"
+        android:layout_height="70dp"
+        android:layout_marginTop="13dp"
+        android:layout_below="@+id/macroOff"
+        android:layout_alignStart="@+id/macroOff" />
+
+    <Button
+        android:text=" "
+        android:id="@+id/SmacroOff"
+        android:background="@drawable/sensoroffb"
+        android:onClick="onClick"
+        android:layout_width="270dp"
+        android:layout_height="70dp"
+        android:layout_marginTop="15dp"
+        android:layout_below="@+id/SmacroOn"
+        android:layout_alignStart="@+id/SmacroOn" />
+
+</RelativeLayout>
