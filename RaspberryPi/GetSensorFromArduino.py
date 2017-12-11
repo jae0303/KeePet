@@ -20,26 +20,30 @@ CarNum = "5"
 table_log = dynamodb.Table('Log')
 table_option = dynamodb.Table('Option')
 table_macro = dynamodb.Table('Macro')
-ser_sensor = serial.Serial('/dev/ttyACM1',9600,timeout=1)
+ser_sensor = serial.Serial('/dev/ttyACM0',9600,timeout=1)
 ser_keepet = serial.Serial('/dev/ttyUSB0',9600,timeout=1)
 #ser.open()
 while True:
+	response_arduino = ""
 	response_arduino = ser_sensor.readline()
 	print(response_arduino)
 	weight=1
+	if response_arduino=='F':
+		response_arduino=""
 	if 'S' in response_arduino:
 		weight=0
-	if 'F' in response_arduino:
-		ser_keepet.write('0/-90/0')
 	if 'B' in response_arduino:
-		for j in range(0,1):
-			ser_keepet.write('0/90/0')
+		ser_keepet.write('0/90/0')
+		time.sleep(0.5)
+		ser_keepet.write('0/0/0')
 	if 'L' in response_arduino:
-		for j in range(0,1):
-			ser_keepet.write('90/0/0')
+		ser_keepet.write('90/0/0')
+		time.sleep(0.5)
+		ser_keepet.write('0/0/0')
 	if 'R' in response_arduino:
-		for j in range(0,1):
-			ser_keepet.write('-90/0/0')
+		ser_keepet.write('-90/0/0')
+		time.sleep(0.5)
+		ser_keepet.write('0/0/0')
 	if response_arduino!="" and weight==0:
 		now = datetime.datetime.now()
 		result_log = table_log.put_item(
