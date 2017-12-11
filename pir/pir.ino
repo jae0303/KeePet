@@ -1,22 +1,33 @@
+
 #define SNDSENSORPIN A0
  
 //int ledPin = 13; // LED 연결핀
-int pirDegitalPin = 2; // 센서 시그널핀
-int pirState = LOW; // PIR 초기상태
-int pirVal = 0; // Signal 입력값
 
 int soundValue = 0;
 int soundValueP = 0;
+int switchF = 8;
+int switchB = 12;
+int switchL = 11;
+int switchR = 9;
+
+int buttonCheckF = LOW;
+int buttonCheckB = LOW;
+int buttonCheckL = LOW;
+int buttonCheckR = LOW;
 
 String soundMessage = "S";
 String msg = "";
-String pirMessage = "P1";
+//String pirMessage = "P1";
  
 void setup() {
     //pinMode(ledPin, OUTPUT); // LED Output 설정
-    pinMode(pirDegitalPin, INPUT); // 센서 Input 설정
+    //pinMode(pirDegitalPin, INPUT); // 센서 Input 설정
     
     pinMode(A0, INPUT);
+    pinMode(switchF, INPUT);
+    pinMode(switchB, INPUT);
+    pinMode(switchL, INPUT);
+    pinMode(switchR, INPUT);
     
     Serial.begin(9600);
 }
@@ -24,50 +35,67 @@ void setup() {
 unsigned long timeChecker = 0;
 
 void loop(){
-  unsigned long currentTime = millis();
-  pirVal = digitalRead(pirDegitalPin); // 센서값 읽기
-    
-    if (pirVal == HIGH) { // 인체감지시
-      if(currentTime - timeChecker > 3000){ //연속 출력 방지용으로 시간 함수 사용
-        timeChecker = currentTime; 
-        
-        Serial.println(pirMessage);
-        //Serial.println(timeChecker);
-        pirVal = LOW;
-      }           
-    }
-    /*else{
-      Serial.println("P0");
-    }*/
+    //unsigned long currentTime = millis();
+  
+    //delay(50);
 
+  while(true){
+    
+    buttonCheckF = digitalRead(switchF);
+
+    if(buttonCheckF == HIGH){
+      Serial.println("F");
+      buttonCheckF = LOW;
+      delay(500);
+      break;
+    }
+
+    buttonCheckB = digitalRead(switchB);
+
+    if(buttonCheckB == HIGH){
+      Serial.println("B");
+      buttonCheckB = LOW;
+      delay(500);
+      break;
+    }
+
+    buttonCheckL = digitalRead(switchL);
+
+    if(buttonCheckL == HIGH){
+      Serial.println("L");
+      buttonCheckL = LOW;
+      delay(500);
+      break;
+    }
+
+    buttonCheckR = digitalRead(switchR);
+
+    if(buttonCheckR == HIGH){
+      Serial.println("R");
+      buttonCheckR = LOW;
+      delay(500);
+      break;
+    }
+
+    soundMessage = "S";    
+    
     soundValue = analogRead(A0);
-    soundMessage.concat(soundValue);
     
-    if(soundValue > 250){
+    if(soundValue > 200){
+      soundMessage.concat(soundValue);
+      
       Serial.println(soundMessage);
+      delay(500);
+      break;
     }
+
+    buttonCheckF = LOW;
+    buttonCheckB = LOW;
+    buttonCheckL = LOW;
+    buttonCheckR = LOW;
     
-    soundMessage = "S";
-        
-    delay(500);
-}
- /*
-void loop(){
-    val = digitalRead(inputPin); // 센서값 읽기
-    if (val == HIGH) { // 인체감지시
-        digitalWrite(ledPin, HIGH); // LED ON
-        if (pirState == LOW) {
-        // 시리얼모니터에 메시지 출력
-        Serial.println("Motion detected!");
-        pirState = HIGH;
-        }
-    } else {
-        digitalWrite(ledPin, LOW); // LED OFF
-        if (pirState == HIGH){        
-            // 시리얼모니터에 메시지 출력            
-            Serial.println("Motion ended!");
-            pirState = LOW;
-        }
     }
+
+    delay(1000);
+
 }
-*/
