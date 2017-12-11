@@ -38,17 +38,22 @@ void loop(){
     //unsigned long currentTime = millis();
   
     //delay(50);
-
+    
+    //buttonCheckF = LOW;
+    buttonCheckB = LOW;
+    buttonCheckL = LOW;
+    buttonCheckR = LOW;
+    
   while(true){
     
-    buttonCheckF = digitalRead(switchF);
+    /*buttonCheckF = digitalRead(switchF);
 
     if(buttonCheckF == HIGH){
       Serial.println("F");
       buttonCheckF = LOW;
       delay(500);
       break;
-    }
+    }*/
 
     buttonCheckB = digitalRead(switchB);
 
@@ -89,13 +94,8 @@ void loop(){
       break;
     }
 
-    buttonCheckF = LOW;
-    buttonCheckB = LOW;
-    buttonCheckL = LOW;
-    buttonCheckR = LOW;
-    
     }
 
-    delay(1000);
+    delay(500);
 
 }
